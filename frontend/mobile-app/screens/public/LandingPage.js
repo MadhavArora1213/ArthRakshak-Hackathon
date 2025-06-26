@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,242 +7,192 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  Animated,
+  FlatList,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import color from '../../constants/theme/color';
+import color from '../../constants/theme/color'; // Remove 's' from colors
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window');
 
 const LandingPage = () => {
   const navigation = useNavigation();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(50)).current;
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    // Start entrance animations
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        tension: 100,
-        friction: 8,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    // Start pulsing animation for CTA
-    const pulse = () => {
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.05,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-      ]).start(() => pulse());
-    };
-    pulse();
-  }, []);
-
-  const trustIndicators = [
-    {
-      icon: 'shield-checkmark',
-      text: '100% सुरक्षित',
-      subText: 'Secure',
-    },
-    {
-      icon: 'people',
-      text: '2+ लाख उपयोगकर्ता',
-      subText: '200K+ Users',
-    },
-    {
-      icon: 'star',
-      text: '4.8★ रेटिंग',
-      subText: '4.8★ Rating',
-    },
-  ];
 
   const features = [
     {
-      icon: 'phone-portrait',
-      title: 'आसान ऐप',
-      subtitle: 'Easy to Use',
-      description: 'सरल भाषा में सीखें',
+      id: 1,
+      icon: require('../../../assets/icons/secure-banking.png'),
+      title: 'सुरक्षित बैंकिंग',
+      description: 'बैंक धोखाधड़ी से बचाव के तरीके सीखें',
     },
     {
-      icon: 'language',
-      title: 'अपनी भाषा',
-      subtitle: 'Your Language',
-      description: '10+ भारतीय भाषाओं में',
+      id: 2,
+      icon: require('../../../assets/icons/language.png'),
+      title: 'अपनी भाषा में सीखें',
+      description: 'हिंदी में वित्तीय शिक्षा प्राप्त करें',
     },
     {
-      icon: 'warning',
+      id: 3,
+      icon: require('../../../assets/icons/fraud-alert.png'),
       title: 'धोखाधड़ी अलर्ट',
-      subtitle: 'Fraud Alerts',
-      description: 'तुरंत चेतावनी पाएं',
+      description: 'तुरंत चेतावनी और सुरक्षा टिप्स पाएं',
     },
     {
-      icon: 'gift',
-      title: 'पुरस्कार जीतें',
-      subtitle: 'Win Rewards',
-      description: 'सीखकर कमाएं',
+      id: 4,
+      icon: require('../../../assets/icons/rewards.png'),
+      title: 'सीखने के पुरस्कार',
+      description: 'सीखकर कैशबैक और रिवार्ड्स जीतें',
     },
   ];
 
+  const steps = [
+    {
+      step: '1',
+      title: 'रजिस्टर करें',
+      description: 'अपना खाता बनाएं और शुरुआत करें',
+    },
+    {
+      step: '2',
+      title: 'सीखें',
+      description: 'वित्तीय सुरक्षा के बारे में जानें',
+    },
+    {
+      step: '3',
+      title: 'सुरक्षित रहें',
+      description: 'धोखाधड़ी से अपना बचाव करें',
+    },
+    {
+      step: '4',
+      title: 'आगे बढ़ें',
+      description: 'अपनी वित्तीय स्थिति सुधारें',
+    },
+  ];
+
+  const testimonials = [
+    {
+      id: 1,
+      name: 'सुनीता शर्मा',
+      location: 'दिल्ली',
+      quote: 'ArthRakshak से मैंने बैंक स्कैम से बचना सीखा',
+      avatar: require('../../../assets/testimonials/user1.png'),
+    },
+    {
+      id: 2,
+      name: 'राज कुमार',
+      location: 'मुंबई',
+      quote: 'अब मैं अपने पैसे बेहतर तरीके से संभालता हूं',
+      avatar: require('../../../assets/testimonials/user2.png'),
+    },
+  ];
+
+  const partnerLogos = [
+    require('../../../assets/partners/sbi.png'),
+    require('../../../assets/partners/hdfc.png'),
+    require('../../../assets/partners/icici.png'),
+    require('../../../assets/partners/axis.png'),
+  ];
+
+  const renderFeatureCard = ({ item }) => (
+    <View style={styles.featureCard}>
+      <Image source={item.icon} style={styles.featureIcon} />
+      <Text style={styles.featureTitle}>{item.title}</Text>
+      <Text style={styles.featureDescription}>{item.description}</Text>
+    </View>
+  );
+
+  const renderTestimonial = ({ item }) => (
+    <View style={styles.testimonialCard}>
+      <Image source={item.avatar} style={styles.avatarImage} />
+      <Text style={styles.testimonialQuote}>"{item.quote}"</Text>
+      <Text style={styles.testimonialName}>{item.name}</Text>
+      <Text style={styles.testimonialLocation}>{item.location}</Text>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContainer}
-      >
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
-        <Animated.View 
-          style={[
-            styles.heroSection,
-            {
-              opacity: fadeAnim,
-              transform: [
-                { translateY: slideAnim },
-                { scale: scaleAnim }
-              ]
-            }
-          ]}
-        >
-          {/* Main Illustration */}
-          <View style={styles.illustrationContainer}>
-            <View style={styles.shieldContainer}>
-              <Icon name="shield-checkmark" size={80} color={color.primaryGreen[500]} />
-              <View style={styles.rupeeIconsContainer}>
-                <Icon name="cash" size={24} color={color.infoYellow[600]} style={styles.floatingIcon1} />
-                <Icon name="card" size={20} color={color.primaryGreen[400]} style={styles.floatingIcon2} />
-                <Icon name="phone-portrait" size={18} color={color.infoYellow[500]} style={styles.floatingIcon3} />
-              </View>
-            </View>
+        <View style={styles.heroSection}>
+          <Image
+            source={require('../../../assets/landing/hero.png')}
+            style={styles.heroImage}
+            accessibilityLabel="ArthRakshak Hero Banner"
+          />
+          <View style={styles.heroContent}>
+            <Text style={styles.heroTitle}>ArthRakshak – आपका वित्तीय रक्षक</Text>
+            <Text style={styles.heroSubtitle}>सीखिए, सुरक्षित रहिए, आगे बढ़िए</Text>
+            <TouchableOpacity
+              style={styles.ctaButton}
+              onPress={() => navigation.navigate('RegisterScreen')}
+              accessibilityLabel="शुरुआत करें बटन"
+            >
+              <Text style={styles.ctaButtonText}>शुरुआत करें</Text>
+            </TouchableOpacity>
           </View>
+        </View>
 
-          {/* Main Headline */}
-          <View style={styles.headlineContainer}>
-            <Text style={styles.mainHeadline}>आपके पैसे का रखवाला</Text>
-            <Text style={styles.subHeadline}>Empowering India's Financial Safety</Text>
-            <Text style={styles.brandName}>ArthRakshak</Text>
-          </View>
-
-          {/* Trust Indicators */}
-          <View style={styles.trustContainer}>
-            {trustIndicators.map((item, index) => (
-              <View key={index} style={styles.trustItem}>
-                <Icon name={item.icon} size={20} color={color.primaryGreen[600]} />
-                <Text style={styles.trustText}>{item.text}</Text>
-                <Text style={styles.trustSubText}>{item.subText}</Text>
-              </View>
-            ))}
-          </View>
-        </Animated.View>
-
-        {/* Features Preview */}
+        {/* Features Section */}
         <View style={styles.featuresSection}>
-          <Text style={styles.featuresTitle}>क्यों चुनें ArthRakshak?</Text>
-          <Text style={styles.featuresSubtitle}>Why Choose ArthRakshak?</Text>
-          
-          <View style={styles.featuresGrid}>
-            {features.map((feature, index) => (
-              <View key={index} style={styles.featureCard}>
-                <View style={styles.featureIconContainer}>
-                  <Icon name={feature.icon} size={28} color={color.primaryGreen[500]} />
-                </View>
-                <Text style={styles.featureTitle}>{feature.title}</Text>
-                <Text style={styles.featureSubtitle}>{feature.subtitle}</Text>
-                <Text style={styles.featureDescription}>{feature.description}</Text>
+          <Text style={styles.sectionTitle}>मुख्य विशेषताएं</Text>
+          <FlatList
+            data={features}
+            renderItem={renderFeatureCard}
+            keyExtractor={(item) => item.id.toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.featuresContainer}
+          />
+        </View>
+
+        {/* Steps Timeline */}
+        <View style={styles.stepsSection}>
+          <Text style={styles.sectionTitle}>कैसे काम करता है</Text>
+          {steps.map((step, index) => (
+            <View key={index} style={styles.stepItem}>
+              <View style={styles.stepNumber}>
+                <Text style={styles.stepNumberText}>{step.step}</Text>
               </View>
+              <View style={styles.stepContent}>
+                <Text style={styles.stepTitle}>{step.title}</Text>
+                <Text style={styles.stepDescription}>{step.description}</Text>
+              </View>
+              {index < steps.length - 1 && <View style={styles.stepConnector} />}
+            </View>
+          ))}
+        </View>
+
+        {/* Community Trust */}
+        <View style={styles.communitySection}>
+          <View style={styles.trustBadge}>
+            <Text style={styles.trustBadgeText}>2 लाख+ उपयोगकर्ताओं का भरोसा</Text>
+          </View>
+          <Text style={styles.sectionTitle}>उपयोगकर्ता की राय</Text>
+          <FlatList
+            data={testimonials}
+            renderItem={renderTestimonial}
+            keyExtractor={(item) => item.id.toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.testimonialsContainer}
+          />
+        </View>
+
+        {/* Partner Logos */}
+        <View style={styles.partnersSection}>
+          <Text style={styles.sectionTitle}>हमारे साझीदार बैंक</Text>
+          <View style={styles.partnersGrid}>
+            {partnerLogos.map((logo, index) => (
+              <Image
+                key={index}
+                source={logo}
+                style={styles.partnerLogo}
+                accessibilityLabel={`Partner bank ${index + 1}`}
+              />
             ))}
           </View>
-        </View>
-
-        {/* Quick Stats */}
-        <View style={styles.statsSection}>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>₹50,000+</Text>
-            <Text style={styles.statLabel}>औसत बचत / Avg Savings</Text>
-          </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>95%</Text>
-            <Text style={styles.statLabel}>धोखाधड़ी से बचाव / Fraud Prevention</Text>
-          </View>
-        </View>
-
-        {/* Voice Support Info */}
-        <View style={styles.accessibilitySection}>
-          <Icon name="volume-high" size={24} color={color.infoYellow[600]} />
-          <Text style={styles.accessibilityText}>
-            आवाज़ में सुनें / Listen with Voice Support
-          </Text>
         </View>
       </ScrollView>
-
-      {/* Fixed Bottom Action Section */}
-      <View style={styles.bottomSection}>
-        {/* Progress Indicator */}
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar}>
-            <View style={styles.progressFill} />
-          </View>
-          <Text style={styles.progressText}>शुरुआत / Step 1 of 12</Text>
-        </View>
-
-        {/* Primary CTA */}
-        <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-          <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={() => navigation.navigate('LanguageSelectionScreen')}
-            accessibilityLabel="शुरू करें"
-            accessibilityRole="button"
-          >
-            <Icon name="arrow-forward" size={24} color={color.pureWhite[50]} style={styles.buttonIcon} />
-            <View style={styles.buttonTextContainer}>
-              <Text style={styles.primaryButtonText}>शुरू करें</Text>
-              <Text style={styles.primaryButtonSubtext}>Get Started</Text>
-            </View>
-          </TouchableOpacity>
-        </Animated.View>
-
-        {/* Secondary CTA */}
-        <TouchableOpacity
-          style={styles.secondaryButton}
-          onPress={() => navigation.navigate('LanguageSelectionScreen')}
-          accessibilityLabel="भाषा बदलें"
-          accessibilityRole="button"
-        >
-          <Icon name="language" size={20} color={color.infoYellow[700]} style={styles.secondaryButtonIcon} />
-          <View style={styles.buttonTextContainer}>
-            <Text style={styles.secondaryButtonText}>भाषा बदलें</Text>
-            <Text style={styles.secondaryButtonSubtext}>Change Language</Text>
-          </View>
-        </TouchableOpacity>
-
-        {/* Help Text */}
-        <Text style={styles.helpText}>
-          मुफ्त है, हमेशा रहेगा / Free forever, no hidden charges
-        </Text>
-      </View>
     </SafeAreaView>
   );
 };
@@ -252,312 +202,222 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.pureWhite[50],
   },
-  scrollContainer: {
-    paddingBottom: 200, // Space for fixed bottom section
-  },
   heroSection: {
-    paddingHorizontal: 20,
-    paddingTop: 30,
-    paddingBottom: 40,
-    alignItems: 'center',
-  },
-  illustrationContainer: {
-    marginBottom: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  shieldContainer: {
     position: 'relative',
-    width: 120,
-    height: 120,
+    height: 300,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: color.primaryGreen[50],
-    borderRadius: 60,
-    elevation: 3,
-    shadowColor: color.primaryGreen[500],
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
   },
-  rupeeIconsContainer: {
+  heroImage: {
+    width: screenWidth,
+    height: 300,
     position: 'absolute',
-    width: 160,
-    height: 160,
+    resizeMode: 'cover',
   },
-  floatingIcon1: {
-    position: 'absolute',
-    top: 10,
-    right: 20,
-  },
-  floatingIcon2: {
-    position: 'absolute',
-    bottom: 20,
-    left: 10,
-  },
-  floatingIcon3: {
-    position: 'absolute',
-    top: 30,
-    left: 0,
-  },
-  headlineContainer: {
+  heroContent: {
     alignItems: 'center',
-    marginBottom: 30,
+    paddingHorizontal: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 10,
+    padding: 20,
   },
-  mainHeadline: {
-    fontSize: 28,
+  heroTitle: {
+    fontSize: 24,
     fontWeight: 'bold',
-    color: color.pureWhite[900],
+    color: color.pureWhite[50],
     textAlign: 'center',
     marginBottom: 8,
-    lineHeight: 36,
   },
-  subHeadline: {
+  heroSubtitle: {
     fontSize: 16,
-    color: color.pureWhite[600],
+    color: color.pureWhite[100],
     textAlign: 'center',
-    marginBottom: 5,
-    lineHeight: 22,
+    marginBottom: 20,
   },
-  brandName: {
-    fontSize: 20,
+  ctaButton: {
+    backgroundColor: color.primaryGreen[500],
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+    borderRadius: 25,
+    elevation: 3,
+    shadowColor: color.primaryGreen[700],
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  ctaButtonText: {
+    color: color.pureWhite[50],
+    fontSize: 16,
     fontWeight: 'bold',
-    color: color.primaryGreen[600],
-    textAlign: 'center',
-  },
-  trustContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    paddingHorizontal: 10,
-  },
-  trustItem: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  trustText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: color.pureWhite[800],
-    textAlign: 'center',
-    marginTop: 5,
-  },
-  trustSubText: {
-    fontSize: 10,
-    color: color.pureWhite[500],
-    textAlign: 'center',
   },
   featuresSection: {
-    paddingHorizontal: 20,
     paddingVertical: 30,
-    backgroundColor: color.pureWhite[100],
   },
-  featuresTitle: {
-    fontSize: 22,
+  sectionTitle: {
+    fontSize: 20,
     fontWeight: 'bold',
     color: color.pureWhite[900],
     textAlign: 'center',
-    marginBottom: 5,
+    marginBottom: 20,
+    paddingHorizontal: 20,
   },
-  featuresSubtitle: {
-    fontSize: 14,
-    color: color.pureWhite[600],
-    textAlign: 'center',
-    marginBottom: 25,
-  },
-  featuresGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+  featuresContainer: {
+    paddingHorizontal: 10,
   },
   featureCard: {
-    width: (screenWidth - 50) / 2,
+    width: 200,
     backgroundColor: color.pureWhite[50],
-    padding: 15,
-    borderRadius: 12,
+    marginHorizontal: 10,
+    padding: 20,
+    borderRadius: 15,
     alignItems: 'center',
-    marginBottom: 15,
     elevation: 2,
     shadowColor: color.pureWhite[400],
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
-  featureIconContainer: {
+  featureIcon: {
     width: 50,
     height: 50,
-    backgroundColor: color.primaryGreen[50],
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 15,
+    resizeMode: 'contain',
   },
   featureTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     color: color.pureWhite[900],
     textAlign: 'center',
-    marginBottom: 2,
-  },
-  featureSubtitle: {
-    fontSize: 11,
-    color: color.primaryGreen[600],
-    textAlign: 'center',
-    marginBottom: 5,
+    marginBottom: 8,
   },
   featureDescription: {
-    fontSize: 12,
+    fontSize: 14,
     color: color.pureWhite[600],
     textAlign: 'center',
-    lineHeight: 16,
+    lineHeight: 20,
   },
-  statsSection: {
+  stepsSection: {
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    backgroundColor: color.pureWhite[100],
+  },
+  stepItem: {
     flexDirection: 'row',
-    backgroundColor: color.primaryGreen[50],
-    marginHorizontal: 20,
-    borderRadius: 12,
-    padding: 20,
-    marginVertical: 20,
-    elevation: 1,
+    alignItems: 'flex-start',
+    marginBottom: 20,
+    position: 'relative',
   },
-  statItem: {
-    flex: 1,
+  stepNumber: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: color.primaryGreen[500],
+    justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 15,
   },
-  statDivider: {
-    width: 1,
-    backgroundColor: color.primaryGreen[200],
-    marginHorizontal: 20,
-  },
-  statNumber: {
-    fontSize: 20,
+  stepNumberText: {
+    color: color.pureWhite[50],
+    fontSize: 16,
     fontWeight: 'bold',
-    color: color.primaryGreen[700],
+  },
+  stepContent: {
+    flex: 1,
+    paddingTop: 5,
+  },
+  stepTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: color.pureWhite[900],
     marginBottom: 5,
   },
-  statLabel: {
-    fontSize: 12,
-    color: color.primaryGreen[600],
-    textAlign: 'center',
-    lineHeight: 16,
+  stepDescription: {
+    fontSize: 14,
+    color: color.pureWhite[600],
+    lineHeight: 20,
   },
-  accessibilitySection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+  stepConnector: {
+    position: 'absolute',
+    left: 19,
+    top: 40,
+    width: 2,
+    height: 20,
+    backgroundColor: color.primaryGreen[300],
+  },
+  communitySection: {
+    paddingVertical: 30,
     paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: color.infoYellow[50],
-    marginHorizontal: 20,
-    borderRadius: 8,
+  },
+  trustBadge: {
+    backgroundColor: color.infoYellow[100],
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    alignSelf: 'center',
     marginBottom: 20,
   },
-  accessibilityText: {
-    fontSize: 14,
+  trustBadgeText: {
     color: color.infoYellow[800],
-    marginLeft: 10,
-    fontWeight: '500',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
-  bottomSection: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+  testimonialsContainer: {
+    paddingHorizontal: 10,
+  },
+  testimonialCard: {
+    width: 280,
     backgroundColor: color.pureWhite[50],
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 30,
-    borderTopWidth: 1,
-    borderTopColor: color.pureWhite[200],
-    elevation: 5,
+    marginHorizontal: 10,
+    padding: 20,
+    borderRadius: 15,
+    alignItems: 'center',
+    elevation: 2,
     shadowColor: color.pureWhite[400],
-    shadowOffset: { width: 0, height: -2 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
-  progressContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  progressBar: {
-    width: 80,
-    height: 4,
-    backgroundColor: color.pureWhite[300],
-    borderRadius: 2,
-    marginBottom: 8,
-  },
-  progressFill: {
-    width: '8%',
-    height: '100%',
-    backgroundColor: color.primaryGreen[500],
-    borderRadius: 2,
-  },
-  progressText: {
-    fontSize: 12,
-    color: color.pureWhite[600],
-    fontWeight: '500',
-  },
-  primaryButton: {
-    backgroundColor: color.primaryGreen[500],
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
-    marginBottom: 12,
-    elevation: 3,
-    shadowColor: color.primaryGreen[700],
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    minHeight: 56, // Accessibility touch target
-  },
-  buttonIcon: {
-    marginRight: 12,
-  },
-  secondaryButtonIcon: {
-    marginRight: 8,
-  },
-  buttonTextContainer: {
-    alignItems: 'center',
-  },
-  primaryButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: color.pureWhite[50],
-  },
-  primaryButtonSubtext: {
-    fontSize: 12,
-    color: color.pureWhite[100],
-    marginTop: 2,
-  },
-  secondaryButton: {
-    backgroundColor: color.infoYellow[100],
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    borderRadius: 8,
+  avatarImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     marginBottom: 15,
-    borderWidth: 1,
-    borderColor: color.infoYellow[300],
-    minHeight: 48, // Accessibility touch target
   },
-  secondaryButtonText: {
+  testimonialQuote: {
     fontSize: 14,
-    fontWeight: '600',
-    color: color.infoYellow[800],
+    color: color.pureWhite[700],
+    textAlign: 'center',
+    fontStyle: 'italic',
+    marginBottom: 10,
+    lineHeight: 20,
   },
-  secondaryButtonSubtext: {
-    fontSize: 11,
-    color: color.infoYellow[600],
-    marginTop: 1,
+  testimonialName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: color.pureWhite[900],
+    marginBottom: 5,
   },
-  helpText: {
+  testimonialLocation: {
     fontSize: 12,
     color: color.pureWhite[500],
-    textAlign: 'center',
-    lineHeight: 16,
+  },
+  partnersSection: {
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    backgroundColor: color.pureWhite[100],
+  },
+  partnersGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  partnerLogo: {
+    width: (screenWidth - 60) / 2,
+    height: 60,
+    resizeMode: 'contain',
+    marginBottom: 20,
+    opacity: 0.7,
   },
 });
 

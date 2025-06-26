@@ -34,6 +34,13 @@ const PhoneVerificationScreen = () => {
     if (inputRefs.current[0]) {
       inputRefs.current[0].focus();
     }
+    
+    // FOR TESTING: Show the demo OTP
+    Alert.alert(
+      'Demo OTP / टेस्ट OTP',
+      'Test OTP: 123456\n(This is for development only)',
+      [{ text: 'OK' }]
+    );
   }, []);
 
   useEffect(() => {

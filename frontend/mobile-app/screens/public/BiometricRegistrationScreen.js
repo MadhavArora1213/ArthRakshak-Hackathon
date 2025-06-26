@@ -11,8 +11,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Keychain from 'react-native-keychain';
-import ReactNativeBiometrics from 'react-native-biometrics';
+// Remove these imports:
+// import * as Keychain from 'react-native-keychain';
+// import ReactNativeBiometrics from 'react-native-biometrics';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../constants/theme/color';
 
@@ -21,8 +22,8 @@ const BiometricRegistrationScreen = () => {
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
-  const [biometricType, setBiometricType] = useState('');
-  const [isBiometricAvailable, setIsBiometricAvailable] = useState(false);
+  const [biometricType, setBiometricType] = useState('Fingerprint');
+  const [isBiometricAvailable, setIsBiometricAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -31,10 +32,11 @@ const BiometricRegistrationScreen = () => {
   }, []);
 
   const checkBiometricAvailability = async () => {
+    // Mock biometric availability for development
     try {
-      const { available, biometryType } = await ReactNativeBiometrics.isSensorAvailable();
-      setIsBiometricAvailable(available);
-      setBiometricType(biometryType);
+      // For development, assume biometrics are available
+      setIsBiometricAvailable(true);
+      setBiometricType(Platform.OS === 'ios' ? 'FaceID' : 'Fingerprint');
     } catch (error) {
       console.log('Biometric availability check failed:', error);
       setIsBiometricAvailable(false);
@@ -118,41 +120,23 @@ const BiometricRegistrationScreen = () => {
     setIsLoading(true);
 
     try {
-      const { success, error } = await ReactNativeBiometrics.simplePrompt({
-        promptMessage: 'बायोमेट्रिक सेटअप / Setup Biometric',
-        fallbackPromptMessage: 'PIN का उपयोग करें / Use PIN',
-        cancelButtonText: 'रद्द करें / Cancel',
-      });
+      // Simulate biometric setup for development
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-      if (success) {
-        // Store biometric preference securely
-        await AsyncStorage.setItem('biometricEnabled', 'true');
-        await Keychain.setInternetCredentials(
-          'ArthRakshakBiometric',
-          'biometric_user',
-          'enabled',
+      // Store biometric preference using AsyncStorage only
+      await AsyncStorage.setItem('biometricEnabled', 'true');
+      await AsyncStorage.setItem('biometricType', biometricType);
+
+      Alert.alert(
+        'सफल! / Success!',
+        'बायोमेट्रिक प्रमाणीकरण सक्षम किया गया / Biometric authentication enabled',
+        [
           {
-            accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
-            authenticationType: Keychain.AUTHENTICATION_TYPE.BIOMETRICS,
-          }
-        );
-
-        Alert.alert(
-          'सफल! / Success!',
-          'बायोमेट्रिक प्रमाणीकरण सक्षम किया गया / Biometric authentication enabled',
-          [
-            {
-              text: 'आगे बढ़ें / Continue',
-              onPress: () => navigation.navigate('OnboardingCompleteScreen'),
-            },
-          ]
-        );
-      } else {
-        Alert.alert(
-          'सेटअप विफल / Setup Failed',
-          error || 'बायोमेट्रिक सेटअप विफल हुआ / Biometric setup failed'
-        );
-      }
+            text: 'आगे बढ़ें / Continue',
+            onPress: () => navigation.navigate('FinancialLiteracyAssessmentScreen'),
+          },
+        ]
+      );
     } catch (error) {
       console.error('Biometric setup error:', error);
       Alert.alert(
@@ -178,7 +162,7 @@ const BiometricRegistrationScreen = () => {
           onPress: async () => {
             await AsyncStorage.setItem('biometricEnabled', 'false');
             await AsyncStorage.setItem('biometricSkipped', 'true');
-            navigation.navigate('OnboardingCompleteScreen');
+            navigation.navigate('FinancialLiteracyAssessmentScreen');
           },
         },
       ]
@@ -201,9 +185,9 @@ const BiometricRegistrationScreen = () => {
           {/* Progress Indicator */}
           <View style={styles.progressSection}>
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: '95%' }]} />
+              <View style={[styles.progressFill, { width: '85%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 6 of 6 • Almost Done</Text>
+            <Text style={styles.progressText}>Step 5 of 6 • Almost Done</Text>
           </View>
         </View>
 

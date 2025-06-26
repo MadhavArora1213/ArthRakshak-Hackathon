@@ -13,8 +13,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Keychain from 'react-native-keychain';
-import ReactNativeBiometrics from 'react-native-biometrics';
+// Remove these imports:
+// import * as Keychain from 'react-native-keychain';
+// import ReactNativeBiometrics from 'react-native-biometrics';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../constants/theme/color';
 
@@ -28,9 +29,9 @@ const SecuritySetupScreen = () => {
   const [confirmPin, setConfirmPin] = useState('');
   const [error, setError] = useState('');
   const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
-  const [biometricType, setBiometricType] = useState('');
+  const [biometricType, setBiometricType] = useState('Fingerprint');
   const [isLoading, setIsLoading] = useState(false);
-  const [isBiometricAvailable, setIsBiometricAvailable] = useState(false);
+  const [isBiometricAvailable, setIsBiometricAvailable] = useState(true);
 
   useEffect(() => {
     checkBiometricAvailability();
@@ -41,11 +42,12 @@ const SecuritySetupScreen = () => {
 
   const checkBiometricAvailability = async () => {
     try {
-      const { available, biometryType } = await ReactNativeBiometrics.isSensorAvailable();
-      setIsBiometricAvailable(available);
-      setBiometricType(biometryType);
+      // Mock biometric availability for development
+      setIsBiometricAvailable(true);
+      setBiometricType(Platform.OS === 'ios' ? 'FaceID' : 'Fingerprint');
     } catch (error) {
       console.log('Biometric check error:', error);
+      setIsBiometricAvailable(false);
     }
   };
 
@@ -124,15 +126,9 @@ const SecuritySetupScreen = () => {
 
   const storePinSecurely = async (pinValue) => {
     try {
-      await Keychain.setInternetCredentials(
-        'ArthRakshakPIN',
-        'user_pin',
-        pinValue,
-        {
-          accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
-          authenticationType: Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
-        }
-      );
+      // Store PIN using AsyncStorage for development
+      await AsyncStorage.setItem('userPIN', pinValue);
+      await AsyncStorage.setItem('pinCreatedAt', new Date().toISOString());
       return true;
     } catch (error) {
       console.error('PIN storage error:', error);
@@ -142,16 +138,11 @@ const SecuritySetupScreen = () => {
 
   const setupBiometric = async () => {
     try {
-      const { success } = await ReactNativeBiometrics.simplePrompt({
-        promptMessage: 'बायोमेट्रिक सेटअप / Setup Biometric',
-        fallbackPromptMessage: 'PIN का उपयोग करें / Use PIN',
-      });
-      
-      if (success) {
-        await AsyncStorage.setItem('biometricEnabled', 'true');
-        return true;
-      }
-      return false;
+      // Mock biometric setup for development
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await AsyncStorage.setItem('biometricEnabled', 'true');
+      await AsyncStorage.setItem('biometricType', biometricType);
+      return true;
     } catch (error) {
       console.error('Biometric setup error:', error);
       return false;
@@ -191,15 +182,14 @@ const SecuritySetupScreen = () => {
 
       // Save security setup completion
       await AsyncStorage.setItem('securitySetupComplete', 'true');
-      await AsyncStorage.setItem('onboardingComplete', 'true');
 
       Alert.alert(
         'सुरक्षा सेटअप पूर्ण! / Security Setup Complete!',
-        'आपका खाता सुरक्षित है। अब आप ArthRakshak का उपयोग कर सकते हैं / Your account is secure. You can now use ArthRakshak',
+        'आपका खाता सुरक्षित है। अब बायोमेट्रिक सेटअप करें / Your account is secure. Now setup biometric authentication',
         [
           {
-            text: 'शुरू करें / Get Started',
-            onPress: () => navigation.navigate('DashboardScreen'),
+            text: 'आगे बढ़ें / Continue',
+            onPress: () => navigation.navigate('BiometricRegistrationScreen'),
           },
         ]
       );
@@ -260,9 +250,9 @@ const SecuritySetupScreen = () => {
           {/* Progress Indicator */}
           <View style={styles.progressSection}>
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: '100%' }]} />
+              <View style={[styles.progressFill, { width: '70%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 5 of 5 • Setup Complete</Text>
+            <Text style={styles.progressText}>Step 4 of 6 • Security Setup</Text>
           </View>
         </View>
 
@@ -559,7 +549,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   disabledButtonText: {
-    color: color.pureWhite[200],
+    color: color.pureWhite[600],
     fontSize: 18,
     fontWeight: 'bold',
   },

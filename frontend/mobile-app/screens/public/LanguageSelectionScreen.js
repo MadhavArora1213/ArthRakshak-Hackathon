@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Localization from 'expo-localization';
-import color from '../../constants/theme/color';
+import colors from '../../constants/theme/color';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -227,7 +227,7 @@ const LanguageSelectionScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.pureWhite[50],
+    backgroundColor: colors.pureWhite[50],
   },
   content: {
     flex: 1,
@@ -241,14 +241,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: color.pureWhite[900],
+    color: colors.pureWhite[900],
     textAlign: 'center',
     marginBottom: 10,
     lineHeight: 32,
   },
   subtitle: {
     fontSize: 16,
-    color: color.pureWhite[600],
+    color: colors.pureWhite[600],
     textAlign: 'center',
     paddingHorizontal: 20,
     lineHeight: 24,
@@ -268,22 +268,22 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: color.pureWhite[50],
+    backgroundColor: colors.pureWhite[50],
     borderWidth: 2,
-    borderColor: color.pureWhite[300],
+    borderColor: colors.pureWhite[300],
     borderRadius: 12,
     padding: 15,
     marginHorizontal: 5,
     minHeight: 80,
     elevation: 2,
-    shadowColor: color.pureWhite[400],
+    shadowColor: colors.pureWhite[400],
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
   selectedLanguageButton: {
-    borderColor: color.primaryGreen[500],
-    backgroundColor: color.primaryGreen[50],
+    borderColor: colors.primaryGreen[500],
+    backgroundColor: colors.primaryGreen[50],
   },
   fullWidthButton: {
     marginHorizontal: 5,
@@ -302,31 +302,31 @@ const styles = StyleSheet.create({
   languageName: {
     fontSize: 16,
     fontWeight: '600',
-    color: color.pureWhite[900],
+    color: colors.pureWhite[900],
     marginBottom: 2,
   },
   selectedLanguageName: {
-    color: color.primaryGreen[700],
+    color: colors.primaryGreen[700],
   },
   nativeLanguageName: {
     fontSize: 14,
-    color: color.pureWhite[600],
+    color: colors.pureWhite[600],
     fontWeight: '500',
   },
   selectedNativeLanguageName: {
-    color: color.primaryGreen[600],
+    color: colors.primaryGreen[600],
   },
   checkmarkContainer: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: color.primaryGreen[500],
+    backgroundColor: colors.primaryGreen[500],
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
   },
   checkmark: {
-    color: color.pureWhite[50],
+    color: colors.pureWhite[50],
     fontSize: 14,
     fontWeight: 'bold',
   },
@@ -335,27 +335,29 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   continueButton: {
-    backgroundColor: color.primaryGreen[500],
+    backgroundColor: colors.primaryGreen[500],
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
     elevation: 3,
-    shadowColor: color.primaryGreen[700],
+    shadowColor: colors.primaryGreen[700],
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
   },
   disabledButton: {
-    backgroundColor: color.pureWhite[400],
+    backgroundColor: colors.pureWhite[400],
     elevation: 0,
     shadowOpacity: 0,
   },
   continueButtonText: {
-    color: color.pureWhite[50],
+    color: colors.pureWhite[50],
     fontSize: 18,
     fontWeight: 'bold',
   },
   disabledButtonText: {
-    color: color.pureWhite[600],
+    color: colors.pureWhite[600],
   },
 });
+
+export default LanguageSelectionScreen;
