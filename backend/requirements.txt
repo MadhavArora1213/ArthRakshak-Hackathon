@@ -1,0 +1,22 @@
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+
+# Database
+sqlalchemy==2.0.30
+psycopg2-binary==2.9.9
+
+# Data Validation
+pydantic==2.7.1
+pydantic-settings==2.2.1
+
+# JWT Auth
+python-jose==3.3.0
+passlib[bcrypt]==1.7.4
+
+# CORS (optional but common for frontend/backend)
+fastapi[all]==0.111.0
+
+# Logging (optional enhancement)
+loguru==0.7.2
+
+alembic==1.13.1
