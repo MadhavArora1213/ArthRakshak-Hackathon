@@ -1,3 +1,4 @@
+# backend/docker-compose.yml
 version: "3.9"
 
 services:
@@ -7,31 +8,39 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: arthrakshak
-    ports:
-      - "5432:5432"
+    ports: ["5432:5432"]
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   api:
     build: .
-    ports:
-      - "8000:8000"
+    ports: ["8000:8000"]
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - .:/app
-    depends_on:
-      - db
-    env_file:
-      - .env
+      - alembic_versions:/app/alembic/versions
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:1234@db:5432/arthrakshak
+      - PYTHONPATH=/app
+      - SECRET_KEY=supersecretkey
 
   pgadmin:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin123
-    ports:
-      - "5050:80"
+    ports: ["5050:80"]
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
-  postgres_data:
+  pg_data:
+  alembic_versions:

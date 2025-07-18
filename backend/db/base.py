@@ -1,4 +1,5 @@
-from models.user import User
-from models.fraud import Fraud
-from models.calculator import Calculator
-from models.goal import Goal
+from sqlalchemy.orm import DeclarativeBase
+
+
+class Base(DeclarativeBase):
+    pass

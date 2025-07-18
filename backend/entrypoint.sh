@@ -1,22 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
 
-echo "🔄 Starting ArthRakshak API Server..."
+echo "🔄  Starting ArthRakshak API …"
 
-# Start the FastAPI server in background
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload &
+# ── wait for Postgres ───────────────────────────────────────────────────────
+/app/scripts/wait-for-db.sh "postgresql://postgres:1234@db:5432/arthrakshak"
 
-# Optional: wait briefly for Uvicorn to boot
-sleep 2
+# ── run migrations (safe‑to‑fail in dev) ───────────────────────────────────
+echo "🗄️  Running Alembic migrations…"
+alembic upgrade head || true
 
-# Print helpful dev links
-echo ""
-echo "✅ ArthRakshak Services are Ready!"
-echo ""
-echo "🌐 API Docs:        http://localhost:8000/docs"
-echo "🔐 Admin Panel:     http://localhost:5050  (pgAdmin4)"
-echo "🛢️  DB:             postgresql://postgres:1234@db:5432/arthrakshak"
-echo "📂 Mounted Volume:  ./app in container"
-echo ""
-echo "👥 pgAdmin Login:   admin@admin.com | admin123"
-echo ""
-wait
+# ── launch Uvicorn ─────────────────────────────────────────────────────────
+exec uvicorn main:app --host 0.0.0.0 --port 8000 --reload
