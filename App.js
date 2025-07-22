@@ -13,6 +13,12 @@ import SecuritySetupScreen from './frontend/mobile-app/screens/public/SecuritySe
 import BiometricRegistrationScreen from './frontend/mobile-app/screens/public/BiometricRegistrationScreen';
 import FinancialLiteracyAssessmentScreen from './frontend/mobile-app/screens/public/FinancialLiteracyAssessmentScreen';
 
+// Import our new components
+import Login from './frontend/Components/Login';
+import Dashboard from './frontend/Components/Dashboard';
+import EnhancedDashboard from './frontend/Components/EnhancedDashboard';
+import Calculator from './frontend/Components/Calculator';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -20,13 +26,45 @@ export default function App() {
     <NavigationContainer>
       <StatusBar style="auto" />
       <Stack.Navigator 
-        initialRouteName="Landing"
+        initialRouteName="Calculator"
         screenOptions={{
           headerShown: false, // Hide headers for clean look
           animation: 'slide_from_right', // Smooth transitions
           gestureEnabled: true, // Enable swipe back gesture
         }}
       >
+        {/* Authentication Screens */}
+        <Stack.Screen 
+          name="Login" 
+          component={Login}
+          options={{
+            gestureEnabled: false, // Disable back gesture on login
+          }}
+        />
+        <Stack.Screen 
+          name="Dashboard" 
+          component={Dashboard}
+        />
+        <Stack.Screen 
+          name="EnhancedDashboard" 
+          component={EnhancedDashboard}
+        />
+        <Stack.Screen 
+          name="Calculator" 
+          component={Calculator}
+          options={{
+            title: 'ArthRakshak Budget Planner',
+            headerShown: false,
+            headerStyle: {
+              backgroundColor: '#3ad08f',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        
         {/* Public/Onboarding Screens */}
         <Stack.Screen 
           name="Landing" 
