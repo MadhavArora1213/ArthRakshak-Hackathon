@@ -10,7 +10,7 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import SafeStatusBar from './SafeStatusBar';
 
 const { width, height } = Dimensions.get('window');
 
@@ -167,7 +167,7 @@ const Dashboard = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="dark" backgroundColor="#FFFDE7" />
+      <SafeStatusBar style="dark" backgroundColor="#FFFDE7" />
       
       {/* Header Bar */}
       <Animated.View 

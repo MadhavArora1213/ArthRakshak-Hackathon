@@ -18,6 +18,8 @@ import Login from './frontend/Components/Login';
 import Dashboard from './frontend/Components/Dashboard';
 import EnhancedDashboard from './frontend/Components/EnhancedDashboard';
 import Calculator from './frontend/Components/Calculator';
+import Chatbot from './frontend/Components/Chatbot';
+import ChatbotRN from './frontend/Components/ChatbotRN';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,7 +28,7 @@ export default function App() {
     <NavigationContainer>
       <StatusBar style="auto" />
       <Stack.Navigator 
-        initialRouteName="Calculator"
+        initialRouteName="Chatbot"
         screenOptions={{
           headerShown: false, // Hide headers for clean look
           animation: 'slide_from_right', // Smooth transitions
@@ -100,6 +102,16 @@ export default function App() {
         <Stack.Screen 
           name="FinancialLiteracyAssessmentScreen" 
           component={FinancialLiteracyAssessmentScreen}
+        />
+        
+        {/* Chatbot Screen */}
+        <Stack.Screen 
+          name="Chatbot" 
+          component={ChatbotRN}
+          options={{
+            title: 'ArthRakshak Assistant',
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

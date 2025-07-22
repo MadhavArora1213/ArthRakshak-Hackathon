@@ -12,7 +12,7 @@ import {
   Alert,
   Modal,
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import SafeStatusBar from './SafeStatusBar';
 import {
   PulseAnimation,
   FadeInAnimation,
@@ -335,7 +335,7 @@ const EnhancedDashboard = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="dark" backgroundColor="#FFFDE7" />
+      <SafeStatusBar style="dark" backgroundColor="#FFFDE7" />
       
       {/* Animated Header */}
       <Animated.View 
