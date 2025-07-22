@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar, Platform } from 'react-native';
 
 // Import your screens
 import LandingPage from './frontend/mobile-app/screens/public/LandingPage';
@@ -20,19 +20,22 @@ import EnhancedDashboard from './frontend/Components/EnhancedDashboard';
 import Calculator from './frontend/Components/Calculator';
 import Chatbot from './frontend/Components/Chatbot';
 import ChatbotRN from './frontend/Components/ChatbotRN';
+import StudentLoanPlanner from './frontend/Components/student-loan-planner';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <StatusBar style="auto" />
+      {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
       <Stack.Navigator 
-        initialRouteName="Chatbot"
+        initialRouteName="StudentLoanPlanner"
         screenOptions={{
-          headerShown: false, // Hide headers for clean look
-          animation: 'slide_from_right', // Smooth transitions
-          gestureEnabled: true, // Enable swipe back gesture
+          headerShown: false,
+          animation: 'slide_from_right',
+          gestureEnabled: true,
+          statusBarStyle: 'auto',
+          statusBarTranslucent: Platform.OS === 'android',
         }}
       >
         {/* Authentication Screens */}
@@ -111,6 +114,19 @@ export default function App() {
           options={{
             title: 'ArthRakshak Assistant',
             headerShown: false,
+          }}
+        />
+
+        {/* Student Loan Planner Screen - Updated with proper configuration */}
+        <Stack.Screen 
+          name="StudentLoanPlanner" 
+          component={StudentLoanPlanner}
+          options={{
+            title: 'Student Loan Planner',
+            headerShown: false,
+            statusBarStyle: 'auto',
+            statusBarBackgroundColor: 'transparent',
+            statusBarTranslucent: true,
           }}
         />
       </Stack.Navigator>
