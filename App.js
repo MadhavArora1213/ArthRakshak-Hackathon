@@ -21,6 +21,7 @@ import Calculator from './frontend/Components/Calculator';
 import Chatbot from './frontend/Components/Chatbot';
 import ChatbotRN from './frontend/Components/ChatbotRN';
 import StudentLoanPlanner from './frontend/Components/student-loan-planner';
+import DtiCalculator from './frontend/Components/Dti_calculator';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,13 +30,11 @@ export default function App() {
     <NavigationContainer>
       {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
       <Stack.Navigator 
-        initialRouteName="StudentLoanPlanner"
+        initialRouteName="DtiCalculator"
         screenOptions={{
           headerShown: false,
           animation: 'slide_from_right',
           gestureEnabled: true,
-          statusBarStyle: 'auto',
-          statusBarTranslucent: Platform.OS === 'android',
         }}
       >
         {/* Authentication Screens */}
@@ -67,6 +66,16 @@ export default function App() {
             headerTitleStyle: {
               fontWeight: 'bold',
             },
+          }}
+        />
+
+        {/* DTI Calculator Screen */}
+        <Stack.Screen 
+          name="DtiCalculator" 
+          component={DtiCalculator}
+          options={{
+            title: 'DTI Calculator',
+            headerShown: false,
           }}
         />
         
@@ -124,9 +133,6 @@ export default function App() {
           options={{
             title: 'Student Loan Planner',
             headerShown: false,
-            statusBarStyle: 'auto',
-            statusBarBackgroundColor: 'transparent',
-            statusBarTranslucent: true,
           }}
         />
       </Stack.Navigator>
