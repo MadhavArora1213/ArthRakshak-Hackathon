@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,19 @@ import {
   Image,
 } from 'react-native';
 import SafeStatusBar from './SafeStatusBar';
+import { LanguageContext } from './Loding'; // Import context from Loding.js
+import { useLanguage } from './Loding';
 
 const { width, height } = Dimensions.get('window');
 
-const Dashboard = () => {
+const Dashboard = ({ route }) => {
+  // Get language from navigation or context
+  const { selectedLanguage, languageContent } = route.params || {};
+  const context = useContext(LanguageContext);
+  const content = languageContent || (context ? context.getCurrentContent() : {});
+  const { getCurrentContent } = useLanguage();
+  const languageContentAll = getCurrentContent();
+
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userName] = useState('Kashish Singh'); // This would come from user context/props
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -216,8 +225,8 @@ const Dashboard = () => {
             },
           ]}
         >
-          <Text style={styles.welcomeText}>Welcome back, {userName} 👋</Text>
-          <Text style={styles.welcomeSubtext}>Stay informed. Stay secure.</Text>
+          <Text style={styles.welcomeText}>{content.welcome} 👋</Text>
+          <Text style={styles.welcomeSubtext}>{content.brandDesc}</Text>
           <View style={styles.timeContainer}>
             <Text style={styles.timeText}>{formatTime(currentTime)}</Text>
             <Text style={styles.dateText}>{formatDate(currentTime)}</Text>
@@ -240,7 +249,7 @@ const Dashboard = () => {
           <AnimatedCard delay={300}>
             <View style={styles.card}>
               <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Recent Fraud Alerts</Text>
+                <Text style={styles.cardTitle}>{content['Recent Fraud Alerts'] || 'Recent Fraud Alerts'}</Text>
                 <Text style={styles.cardIcon}>🚨</Text>
               </View>
               {recentAlerts.map((alert, index) => (
@@ -264,11 +273,11 @@ const Dashboard = () => {
           <AnimatedCard delay={400}>
             <View style={styles.tipCard}>
               <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Tip of the Day</Text>
+                <Text style={styles.cardTitle}>{content['Tip of the Day'] || 'Tip of the Day'}</Text>
                 <Text style={styles.cardIcon}>💡</Text>
               </View>
               <Text style={styles.tipText}>
-                Never share your OTP with anyone. Banks and legitimate services will never ask for OTP over phone calls.
+                {content.tipMessage || 'Never share your OTP with anyone. Banks and legitimate services will never ask for OTP over phone calls.'}
               </Text>
             </View>
           </AnimatedCard>
@@ -277,7 +286,7 @@ const Dashboard = () => {
           <AnimatedCard delay={500}>
             <View style={styles.card}>
               <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Account Activity</Text>
+                <Text style={styles.cardTitle}>{content['Account Activity'] || 'Account Activity'}</Text>
                 <Text style={styles.cardIcon}>📱</Text>
               </View>
               <View style={styles.activityItem}>
@@ -295,7 +304,7 @@ const Dashboard = () => {
           <AnimatedCard delay={600}>
             <View style={styles.scoreCard}>
               <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Awareness Score</Text>
+                <Text style={styles.cardTitle}>{content['Awareness Score'] || 'Awareness Score'}</Text>
                 <Text style={styles.cardIcon}>🏆</Text>
               </View>
               <View style={styles.scoreContainer}>
@@ -316,7 +325,7 @@ const Dashboard = () => {
 
         {/* Navigation Grid */}
         <View style={styles.navigationSection}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
+          <Text style={styles.sectionTitle}>{content.quickActions || 'Quick Actions'}</Text>
           <View style={styles.navigationGrid}>
             {navigationItems.map((item, index) => (
               <AnimatedCard key={item.id} delay={700 + (index * 100)}>
@@ -337,14 +346,25 @@ const Dashboard = () => {
         {/* Footer */}
         <View style={styles.footer}>
           <TouchableOpacity style={styles.footerButton}>
-            <Text style={styles.footerText}>Support & Help</Text>
+            <Text style={styles.footerText}>{content.supportHelp || 'Support & Help'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.footerButton}>
-            <Text style={styles.footerText}>Contact Us</Text>
+            <Text style={styles.footerText}>{content.contactUs || 'Contact Us'}</Text>
           </TouchableOpacity>
           <View style={styles.securityBadge}>
             <Text style={styles.securityText}>🔒 Secured by ArthRakshak</Text>
           </View>
+        </View>
+
+        {/* Dashboard Image Section */}
+        <View style={styles.imageSection}>
+          <Image
+            source={{ uri: 'file:///c:/Users/hp/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/TempState/5FD77AD38537B1E3630004DD1F63F5A1/WhatsApp Image 2025-07-23 at 20.24.23_55ae8535.jpg' }}
+            style={styles.dashboardImage}
+          />
+          <Text style={styles.imageCaption}>
+            {selectedLanguage === 'hi' ? 'यह एक धोखाधड़ी अलर्ट है' : 'This is a fraud alert'}
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -709,6 +729,23 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#00C853',
     fontWeight: '600',
+  },
+  imageSection: {
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  dashboardImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+    marginVertical: 16,
+    borderRadius: 12,
+  },
+  imageCaption: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 12,
   },
 });
 

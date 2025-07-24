@@ -14,13 +14,16 @@ import BiometricRegistrationScreen from './frontend/mobile-app/screens/public/Bi
 import FinancialLiteracyAssessmentScreen from './frontend/mobile-app/screens/public/FinancialLiteracyAssessmentScreen';
 
 // Import our new components
+import LoadingFlow from './frontend/Components/Loding';
 import Login from './frontend/Components/Login';
+import SignUp from './frontend/Components/SignUp';
 import Dashboard from './frontend/Components/Dashboard';
 import EnhancedDashboard from './frontend/Components/EnhancedDashboard';
 import Calculator from './frontend/Components/Calculator';
 import Chatbot from './frontend/Components/Chatbot';
 import ChatbotRN from './frontend/Components/ChatbotRN';
 import StudentLoanPlanner from './frontend/Components/student-loan-planner';
+import FinancialTips from './frontend/Components/FinancialTips';
 import DtiCalculator from './frontend/Components/Dti_calculator';
 
 const Stack = createNativeStackNavigator();
@@ -28,21 +31,47 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
+      {/* {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />} */}
       <Stack.Navigator 
-        initialRouteName="DtiCalculator"
+        initialRouteName="FinancialTips"
         screenOptions={{
           headerShown: false,
           animation: 'slide_from_right',
           gestureEnabled: true,
         }}
       >
-        {/* Authentication Screens */}
+        {/* Only one FinancialTips screen should be present */}
+        <Stack.Screen
+          name="FinancialTips"
+          component={FinancialTips}
+          options={{
+            title: 'Financial Tips',
+            headerShown: false,
+          }}
+        />
+        {/* Remove duplicate FinancialTips and any other duplicate screens */}
+        {/* 
+        <Stack.Screen 
+          name="LoadingFlow" 
+          component={LoadingFlow}
+          options={{
+            gestureEnabled: false,
+            headerShown: false,
+          }}
+        />
         <Stack.Screen 
           name="Login" 
           component={Login}
           options={{
             gestureEnabled: false, // Disable back gesture on login
+          }}
+        />
+        <Stack.Screen 
+          name="SignUp" 
+          component={SignUp}
+          options={{
+            title: 'Create Account',
+            headerShown: false,
           }}
         />
         <Stack.Screen 
@@ -79,6 +108,8 @@ export default function App() {
           }}
         />
         
+
+
         {/* Public/Onboarding Screens */}
         <Stack.Screen 
           name="Landing" 
